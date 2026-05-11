@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: petclinic-api-gateway
+    runtime: docker
+    dockerContext: .
+    plan: free
