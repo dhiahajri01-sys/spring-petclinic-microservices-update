@@ -1,6 +1,3 @@
-# ============================================
-# Build stage
-# ============================================
 FROM eclipse-temurin:17 AS builder
 WORKDIR /app
 
@@ -26,19 +23,17 @@ COPY spring-petclinic-genai-service/src ./spring-petclinic-genai-service/src/
 COPY spring-petclinic-admin-server/src ./spring-petclinic-admin-server/src/
 COPY spring-petclinic-api-gateway/src ./spring-petclinic-api-gateway/src/
 
+# FIX: Make mvnw executable
+RUN chmod +x mvnw
+
 RUN ./mvnw clean package -pl spring-petclinic-api-gateway -am -DskipTests
 
-# ============================================
-# Runtime stage
-# ============================================
 FROM eclipse-temurin:17
 WORKDIR /app
 
 COPY --from=builder /app/spring-petclinic-api-gateway/target/spring-petclinic-api-gateway-4.0.1.jar app.jar
 
 EXPOSE 8080
-
-# Standalone mode - no config server, no eureka needed
 ENV SPRING_PROFILES_ACTIVE=default
 ENV SPRING_CLOUD_CONFIG_ENABLED=false
 ENV EUREKA_CLIENT_ENABLED=false
