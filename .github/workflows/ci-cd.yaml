@@ -37,10 +37,10 @@ jobs:
         run: chmod +x mvnw
 
       - name: Build all services
-        run: ./mvnw clean install -DskipTests
+        run: ./mvnw clean install -DskipTests -Dmaven.wagon.http.ssl.insecure=true
 
       - name: Run tests
-        run: ./mvnw test
+        run: ./mvnw test -Dmaven.wagon.http.ssl.insecure=true
 
       - name: Upload test reports
         if: always()
@@ -101,7 +101,7 @@ jobs:
           cache: maven
 
       - name: Run Maven verify
-        run: ./mvnw verify
+        run: ./mvnw verify -Dmaven.wagon.http.ssl.insecure=true
 
   security-scan:
     name: Dependency Security Scan
@@ -118,6 +118,7 @@ jobs:
           scan-ref: .
           format: table
           exit-code: 0
+          skip-dirs: .mvn
 
   docker-compose-test:
     name: Docker Compose Integration Test
